@@ -2,6 +2,7 @@ import { Controller, Post, Body, UseGuards, Request, Get } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
+import { RegisterDto, LoginDto, VerifyDto } from './dto/auth.dto'
 
 @ApiTags('auth')
 @Controller('auth')
@@ -11,8 +12,8 @@ export class AuthController {
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, description: 'User created successfully' })
-  async register(@Body() body: { email: string; password: string }) {
-    return this.authService.register(body.email, body.password)
+  async register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto.email, dto.password)
   }
 
   @UseGuards(AuthGuard('local'))
@@ -35,8 +36,8 @@ export class AuthController {
   @Post('verify')
   @ApiOperation({ summary: 'Verify JWT token' })
   @ApiResponse({ status: 200, description: 'Token is valid' })
-  async verify(@Body() body: { token: string }) {
-    const payload = await this.authService.verifyToken(body.token)
+  async verify(@Body() dto: VerifyDto) {
+    const payload = await this.authService.verifyToken(dto.token)
     return { valid: !!payload, payload }
   }
 }
