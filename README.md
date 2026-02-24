@@ -57,10 +57,13 @@ npm run test:cov
 
 ### Test Results
 
-**Unit Tests**: 21 tests passing
-- `src/users/users.service.spec.ts` - 6 tests
+**Unit Tests**: 32 tests passing
+- `src/users/users.service.spec.ts` - 8 tests
 - `src/auth/auth.service.spec.ts` - 8 tests
 - `src/auth/auth.controller.spec.ts` - 7 tests
+- `src/auth/jwt.strategy.spec.ts` - 2 tests
+- `src/auth/local.strategy.spec.ts` - 2 tests
+- `src/health/health.controller.spec.ts` - 5 tests
 
 **E2E Tests**: 10 tests passing
 - `test/auth.e2e-spec.ts` - Full auth flow tests
@@ -70,6 +73,9 @@ npm run test:cov
 | Module | % Statements | % Branches | % Functions | % Lines |
 |--------|-------------|------------|-------------|---------|
 | auth.service.ts | 100% | 100% | 100% | 100% |
+| auth.controller.ts | 100% | 100% | 100% | 100% |
+| jwt.strategy.ts | 100% | 100% | 100% | 100% |
+| local.strategy.ts | 100% | 100% | 100% | 100% |
 | users.service.ts | 100% | 100% | 100% | 100% |
 | auth.dto.ts | 100% | 100% | 100% | 100% |
 

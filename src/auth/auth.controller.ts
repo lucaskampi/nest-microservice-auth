@@ -2,7 +2,12 @@ import { Controller, Post, Body, UseGuards, Request, Get } from '@nestjs/common'
 import { AuthGuard } from '@nestjs/passport'
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger'
 import { AuthService } from './auth.service'
-import { RegisterDto, LoginDto, VerifyDto } from './dto/auth.dto'
+import { RegisterDto, VerifyDto } from './dto/auth.dto'
+import { UserWithoutPassword } from '../users/users.service'
+
+interface AuthenticatedRequest extends Request {
+  user: UserWithoutPassword
+}
 
 @ApiTags('auth')
 @Controller('auth')
@@ -20,7 +25,7 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: 'Login with email and password' })
   @ApiResponse({ status: 200, description: 'Returns JWT token' })
-  async login(@Request() req: any) {
+  async login(@Request() req: AuthenticatedRequest) {
     return this.authService.login(req.user)
   }
 
@@ -29,7 +34,7 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get current user profile' })
   @ApiResponse({ status: 200, description: 'Returns user profile' })
-  getProfile(@Request() req: any) {
+  getProfile(@Request() req: AuthenticatedRequest) {
     return req.user
   }
 

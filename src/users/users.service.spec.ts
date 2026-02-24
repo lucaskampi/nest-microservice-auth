@@ -33,7 +33,7 @@ describe('UsersService', () => {
   })
 
   describe('create', () => {
-    it('should create a user with hashed password', async () => {
+    it('should create a user with hashed password and return without password', async () => {
       const hashedPassword = 'hashedPassword123'
       ;(bcrypt.hash as jest.Mock).mockResolvedValue(hashedPassword)
       prisma.user.create.mockResolvedValue({
@@ -41,6 +41,8 @@ describe('UsersService', () => {
         email: 'test@example.com',
         password: hashedPassword,
         role: 'USER',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       })
 
       const result = await service.create('test@example.com', 'password123')
@@ -56,9 +58,9 @@ describe('UsersService', () => {
       expect(result).toEqual({
         id: 1,
         email: 'test@example.com',
-        password: hashedPassword,
         role: 'USER',
       })
+      expect(result).not.toHaveProperty('password')
     })
 
     it('should create a user with custom role', async () => {
@@ -68,6 +70,8 @@ describe('UsersService', () => {
         email: 'admin@example.com',
         password: 'hashed',
         role: 'ADMIN',
+        createdAt: new Date(),
+        updatedAt: new Date(),
       })
 
       const result = await service.create('admin@example.com', 'pass', 'ADMIN')
@@ -80,6 +84,7 @@ describe('UsersService', () => {
         },
       })
       expect(result.role).toBe('ADMIN')
+      expect(result).not.toHaveProperty('password')
     })
   })
 
@@ -104,13 +109,19 @@ describe('UsersService', () => {
   })
 
   describe('validatePassword', () => {
+    const mockUser = {
+      id: 1,
+      email: 'test@example.com',
+      password: 'hashedPassword',
+      role: 'USER',
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    }
+
     it('should return true for valid password', async () => {
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
 
-      const result = await service.validatePassword(
-        { password: 'hashedPassword' },
-        'correctPassword',
-      )
+      const result = await service.validatePassword(mockUser, 'correctPassword')
 
       expect(bcrypt.compare).toHaveBeenCalledWith('correctPassword', 'hashedPassword')
       expect(result).toBe(true)
@@ -119,10 +130,7 @@ describe('UsersService', () => {
     it('should return false for invalid password', async () => {
       ;(bcrypt.compare as jest.Mock).mockResolvedValue(false)
 
-      const result = await service.validatePassword(
-        { password: 'hashedPassword' },
-        'wrongPassword',
-      )
+      const result = await service.validatePassword(mockUser, 'wrongPassword')
 
       expect(result).toBe(false)
     })
