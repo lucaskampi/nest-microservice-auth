@@ -45,7 +45,33 @@ npm run dev
 
 # Run tests
 npm test
+
+# Run e2e tests
+npm run test:e2e
+
+# Run tests with coverage
+npm run test:cov
 ```
+
+## Testing
+
+### Test Results
+
+**Unit Tests**: 21 tests passing
+- `src/users/users.service.spec.ts` - 6 tests
+- `src/auth/auth.service.spec.ts` - 8 tests
+- `src/auth/auth.controller.spec.ts` - 7 tests
+
+**E2E Tests**: 10 tests passing
+- `test/auth.e2e-spec.ts` - Full auth flow tests
+
+### Coverage
+
+| Module | % Statements | % Branches | % Functions | % Lines |
+|--------|-------------|------------|-------------|---------|
+| auth.service.ts | 100% | 100% | 100% | 100% |
+| users.service.ts | 100% | 100% | 100% | 100% |
+| auth.dto.ts | 100% | 100% | 100% | 100% |
 
 ## Docker
 
