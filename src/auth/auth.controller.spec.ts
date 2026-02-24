@@ -2,10 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 import { AuthGuard } from '@nestjs/passport'
+import { UserWithoutPassword } from '../users/users.service'
 
 describe('AuthController', () => {
   let controller: AuthController
   let authService: { login: jest.Mock; register: jest.Mock; verifyToken: jest.Mock }
+
+  const mockUser: UserWithoutPassword = { id: 1, email: 'test@example.com', role: 'USER' }
 
   beforeEach(async () => {
     authService = {
@@ -34,7 +37,6 @@ describe('AuthController', () => {
 
   describe('register', () => {
     it('should register a new user', async () => {
-      const mockUser = { id: 1, email: 'test@example.com', role: 'USER' }
       authService.register.mockResolvedValue(mockUser)
 
       const result = await controller.register({ email: 'test@example.com', password: 'password123' })
@@ -46,24 +48,24 @@ describe('AuthController', () => {
 
   describe('login', () => {
     it('should return login response', async () => {
-      const mockResponse = { access_token: 'token', user: { id: 1, email: 'test@example.com', role: 'USER' } }
+      const mockResponse = { access_token: 'token', user: mockUser }
       authService.login.mockResolvedValue(mockResponse)
-      const req = { user: { id: 1, email: 'test@example.com', role: 'USER' } }
+      const req = { user: mockUser } as any
 
       const result = await controller.login(req)
 
-      expect(authService.login).toHaveBeenCalledWith(req.user)
+      expect(authService.login).toHaveBeenCalledWith(mockUser)
       expect(result).toEqual(mockResponse)
     })
   })
 
   describe('getProfile', () => {
     it('should return user profile from request', () => {
-      const req = { user: { id: 1, email: 'test@example.com', role: 'USER' } }
+      const req = { user: mockUser } as any
 
       const result = controller.getProfile(req)
 
-      expect(result).toEqual(req.user)
+      expect(result).toEqual(mockUser)
     })
   })
 
