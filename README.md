@@ -84,4 +84,8 @@ curl -X POST http://localhost:3001/auth/register \
 curl -X POST http://localhost:3001/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email": "user@example.com", "password": "password123"}'
+
+---
+
+> This service was extracted from the monorepo `nest-microservice-store` as part of a microservices migration. Initial commits were done via multi-agent setup to avoid merge conflicts.
 ```
